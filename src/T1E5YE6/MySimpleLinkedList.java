@@ -1,0 +1,103 @@
+package T1E5YE6;
+
+import java.util.Iterator;
+
+public class MySimpleLinkedList<T  extends Comparable<T>> implements Iterable<T>{
+
+	private Node<T> first;
+	private int size;
+	
+	public MySimpleLinkedList() {
+		this.first = null;
+		this.size = 0;
+	}
+	
+	public void insertFront(T info) {
+		Node<T> tmp = new Node<T>(info,null);
+		tmp.setNext(this.first);
+		this.first = tmp;
+		this.size++;
+	}
+	
+	public T extractFront() {		// metodo que extrae el primer elemento de la lista
+		if(!this.isEmpty()) {      // pregunto si la lista esta vacia
+			T info = this.first.getInfo();
+			this.first = this.first.getNext();
+			this.size--;
+			return info;
+		}
+		return null;
+	}
+
+	public boolean isEmpty() {
+		return this.size == 0 && this.first == null;
+	}
+	
+	public T get(int index) {
+		if((!isEmpty() && index >= 0)&&(index < size())) {  //pregunto si la lista no esta vacia y ademas si el tamaño de la lista es mas grande que el indice que se agrego
+			Node<T> tmp = this.first;
+			for(int i=0;i < index;i++) {
+				tmp = tmp.getNext();
+			}
+			return tmp.getInfo();
+		}
+		return null;
+	}
+	
+	public int size() {
+		return this.size;
+	}
+	
+	//metodo que se agrega para el ejercicio3
+	public int indexOf(T info) {
+		if(!isEmpty()) {
+			for(int i = 0; i < this.size; i++) {
+				if (info.equals(this.get(i))) {
+					return i;
+				}
+			}
+		}
+		return -1;
+	}
+	
+	
+	//metodo que se le agrega para el ejercicio5
+	public void insertOrdered(T info) {
+        Node<T> nuevo = new Node<T>(info, null);
+        if (this.first == null || this.first.getInfo().compareTo(info) >= 0) {
+            // Si la lista está vacía o el nuevo elemento es menor que el primero
+            nuevo.setNext(this.first);
+            this.first = nuevo;
+        } else {
+            Node<T> actual = this.first;
+            Node<T> tmp = null;
+
+            while (actual != null && actual.getInfo().compareTo(info) < 0) {
+                tmp = actual;
+                actual = actual.getNext();
+            }
+
+            nuevo.setNext(actual);
+            tmp.setNext(nuevo);
+        }
+        this.size++; // Incrementar tamaño de la lista
+    }
+
+	@Override
+	public Iterator<T> iterator() {
+		return new MyIterator<T>(this.first);
+	}
+	
+	@Override
+	public String toString() {
+		if (isEmpty()) {
+			return "La lista esta vacia";
+		}
+		System.out.println("--------------------------La lista ----------------");
+		String resultado = "";
+		for(int i = 0; i < this.size; i++) {
+			resultado += "Pos " + i + " - Valor " + this.get(i) + " \n";
+		}
+		return resultado;
+	}
+}
